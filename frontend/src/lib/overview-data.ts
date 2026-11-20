@@ -111,14 +111,31 @@ export const WORKLOADS = [
 export const AUDIT = [
   {
     what: "Telemetry receipt signed · −60.2 MW verified at meter",
+    tone: "ok",
     at: "14:00:41.208",
     hash: "9f3a…c71e",
   },
-  { what: "NVML cap applied 700 → 350 W · 82,144 GPUs", at: "14:00:02.917", hash: "4b0d…2a9f" },
-  { what: "Checkpoint ACK · mm-pt-v4 · 34.8 s", at: "13:59:40.112", hash: "e17c…09bd" },
-  { what: "Checkpoint ACK · llm-pt-7b3 · 38.2 s", at: "13:59:21.540", hash: "a6f2…77e0" },
+  {
+    tone: "info",
+    what: "NVML cap applied 700 → 350 W · 82,144 GPUs",
+    at: "14:00:02.917",
+    hash: "4b0d…2a9f",
+  },
+  {
+    tone: "info",
+    what: "Checkpoint ACK · mm-pt-v4 · 34.8 s",
+    at: "13:59:40.112",
+    hash: "e17c…09bd",
+  },
+  {
+    tone: "info",
+    what: "Checkpoint ACK · llm-pt-7b3 · 38.2 s",
+    at: "13:59:21.540",
+    hash: "a6f2…77e0",
+  },
   {
     what: "OpenADR 2.0b event received · 60 MW · ramp 120 s",
+    tone: "warn",
     at: "13:58:44.003",
     hash: "0c88…d4a1",
   },

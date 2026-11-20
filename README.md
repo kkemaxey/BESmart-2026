@@ -1,4 +1,4 @@
-# SynapseGrid
+# GridFlex
 
 **A control room that lets AI data centers balance their loads on the power grid, cutting their electricity use on demand without losing training progress.**
 
@@ -6,7 +6,7 @@
 
 AI training campuses draw hundreds of megawatts, and the grid can't always supply that, especially on hot afternoons when demand peaks and reserve margins run thin. Utilities ask large customers to cut load during these events (demand response). For a data centre that's risky: pull power the wrong way and you lose days of model training.
 
-SynapseGrid connects the two sides:
+GridFlex connects the two sides:
 
 - **Grid signals** arrive from the utility (an OpenADR dispatch, say: "cut 80 MW within 3 minutes").
 - **Compute responds safely:** checkpoint training jobs first, then lower GPU power caps, then defer or migrate low-priority batch work. Safety-critical inference is never touched.

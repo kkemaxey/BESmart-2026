@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
- * SynapseGrid control-room tokens. Dark only, built in OKLCH so equal
+ * GridFlex control-room tokens. Dark only, built in OKLCH so equal
  * lightness reads as equal. Depth comes from progressively lighter surfaces,
  * not shadows. Borders are alpha so they blend on any surface.
  */
@@ -272,18 +272,18 @@ sup {
   height: 0;
 }
 
-/* collapsible: animate height via grid rows */
-.collapse {
+/* collapsible: animate height via grid rows (not ".collapse" — Tailwind owns that name: visibility: collapse) */
+.disclosure {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 240ms var(--ease-out);
 }
 
-.collapse[data-open="true"] {
+.disclosure[data-open="true"] {
   grid-template-rows: 1fr;
 }
 
-.collapse > div {
+.disclosure > div {
   overflow: hidden;
   min-height: 0;
 }

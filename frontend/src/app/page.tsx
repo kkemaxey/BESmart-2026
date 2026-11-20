@@ -11,10 +11,18 @@ const TOTAL_IT = 245;
 const DISPATCHABLE = PRIORITY_TIERS.filter((t) => t.dispatchable).reduce((s, t) => s + t.mw, 0);
 
 const TONE: Record<string, string> = {
-  warn: "text-warn",
-  info: "text-power",
-  ok: "text-sage",
-  muted: "text-ink-3",
+  warn: "var(--color-warn)",
+  info: "var(--color-power)",
+  ok: "var(--color-sage)",
+  muted: "var(--color-ink-3)",
+};
+
+/** P0 is exempt, so it's hatched rather than filled: visibly "not dispatchable". */
+const TIER_FILL: Record<string, string> = {
+  P0: "repeating-linear-gradient(135deg, var(--color-ink-4) 0 2px, var(--color-surface-3) 2px 5px)",
+  P1: "var(--color-accent)",
+  P2: "var(--color-power)",
+  P3: "var(--color-sage)",
 };
 
 export default function OverviewPage() {
@@ -69,30 +77,45 @@ export default function OverviewPage() {
             </>
           }
         >
-          <p className="text-ink-3 mb-3 text-[13px]">
-            <span className="num text-ink-1">{DISPATCHABLE.toFixed(1)} MW</span> dispatchable by job
-            priority tier, of {TOTAL_IT.toFixed(1)} MW <span className="acr">IT</span> load
-          </p>
-          <ul className="flex flex-col gap-2.5">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <p className="flex items-baseline gap-2">
+              <span className="num text-[30px] leading-none font-medium tracking-tight">
+                {DISPATCHABLE.toFixed(1)}
+              </span>
+              <span className="num text-ink-3 text-[13px]">MW dispatchable</span>
+            </p>
+            <p className="text-ink-3 text-[12px]">
+              by job priority tier, of {TOTAL_IT.toFixed(1)} MW <span className="acr">IT</span> load
+            </p>
+          </div>
+
+          {/* one stacked bar; 2px surface gaps between segments, exempt load hatched */}
+          <div
+            className="mt-4 flex h-2.5 gap-[2px] overflow-hidden rounded-[3px]"
+            role="img"
+            aria-label={PRIORITY_TIERS.map((t) => `${t.code} ${t.mw} MW`).join(", ")}
+          >
             {PRIORITY_TIERS.map((t) => (
-              <li
+              <div
                 key={t.code}
-                className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1.5 sm:grid-cols-[260px_minmax(0,1fr)_72px]"
-              >
-                <p className="truncate text-[13px]">
-                  <span className="num text-ink-3">{t.code}</span> · {t.name}
-                  <span className="text-ink-3 ml-2 text-[12px]">{t.action}</span>
-                </p>
-                <div className="bg-surface-3 order-last col-span-2 h-2 overflow-hidden rounded-full sm:order-none sm:col-span-1">
-                  <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${(t.mw / TOTAL_IT) * 100}%`,
-                      background: t.dispatchable ? "var(--color-accent)" : "var(--color-ink-4)",
-                    }}
-                  />
-                </div>
-                <p className="num text-right text-[13px]">{t.mw.toFixed(1)} MW</p>
+                className="h-full first:rounded-l-[3px] last:rounded-r-[3px]"
+                style={{ flexGrow: t.mw, flexBasis: 0, background: TIER_FILL[t.code] }}
+              />
+            ))}
+          </div>
+
+          <ul className="divide-line mt-3 flex flex-col divide-y">
+            {PRIORITY_TIERS.map((t) => (
+              <li key={t.code} className="flex items-center gap-3 py-2.5 text-[13px]">
+                <span
+                  className="size-2.5 shrink-0 rounded-[2px]"
+                  style={{ background: TIER_FILL[t.code] }}
+                />
+                <span className="min-w-0 flex-1 truncate">
+                  <span className="num">{t.code}</span> · {t.name}
+                </span>
+                <span className="text-ink-3 hidden text-[12px] sm:inline">{t.action}</span>
+                <span className="num w-[68px] text-right font-medium">{t.mw.toFixed(1)} MW</span>
               </li>
             ))}
           </ul>
@@ -107,34 +130,39 @@ export default function OverviewPage() {
             </>
           }
         >
-          <div className="text-ink-3 mb-2 flex items-center justify-between text-[12px]">
+          <div className="text-ink-3 mb-3 flex items-center justify-between text-[12px]">
             <span>5 of 41 shown</span>
             <Link
               href="/dispatch"
-              className="focus-ring text-ink-2 hover:text-ink-1 rounded underline"
+              className="focus-ring text-accent hover:text-accent-hover rounded underline"
             >
               Open Dispatch Studio →
             </Link>
           </div>
           <div className="-mx-1 overflow-x-auto">
             <table className="w-full min-w-[640px] text-left text-[13px]">
-              <thead className="text-ink-3 text-[11px] tracking-wide uppercase">
+              <thead className="text-ink-3 text-[10.5px] tracking-[0.08em] uppercase">
                 <tr className="border-line border-b">
                   <th className="px-1 py-2 font-medium">Job</th>
                   <th className="px-1 py-2 font-medium">Class</th>
                   <th className="px-1 py-2 text-right font-medium">GPUs</th>
-                  <th className="px-1 py-2 text-right font-medium">Last checkpoint</th>
-                  <th className="px-1 py-2 pl-6 font-medium">State</th>
+                  <th className="px-1 py-2 pl-4 font-medium">Last checkpoint</th>
+                  <th className="px-1 py-2 font-medium">State</th>
                 </tr>
               </thead>
               <tbody>
                 {WORKLOADS.map((r) => (
                   <tr key={r.job} className="border-line border-b last:border-0">
-                    <td className="num text-ink-1 px-1 py-2.5">{r.job}</td>
-                    <td className="text-ink-2 px-1 py-2.5">{r.cls}</td>
-                    <td className="num px-1 py-2.5 text-right">{r.gpus}</td>
-                    <td className="num text-ink-2 px-1 py-2.5 text-right">{r.ckpt}</td>
-                    <td className={`px-1 py-2.5 pl-6 ${TONE[r.tone]}`}>{r.state}</td>
+                    <td className="num text-ink-1 px-1 py-3">{r.job}</td>
+                    <td className="text-ink-2 px-1 py-3">{r.cls}</td>
+                    <td className="num px-1 py-3 text-right">{r.gpus}</td>
+                    <td className="num text-ink-2 px-1 py-3 pl-4">{r.ckpt}</td>
+                    <td className="px-1 py-3">
+                      <span className="flex items-center gap-2" style={{ color: TONE[r.tone] }}>
+                        <span className="dot" />
+                        {r.state}
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -156,16 +184,16 @@ export default function OverviewPage() {
           <p className="text-ink-3 mb-3 text-[12px]">
             Signed entries, <span className="acr">IEEE</span> 1588 time-synced
           </p>
-          <ol className="flex flex-col">
+          <ol className="divide-line flex flex-col divide-y">
             {AUDIT.map((a) => (
-              <li
-                key={a.at}
-                className="border-line flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 border-b py-2.5 last:border-0"
-              >
-                <span className="text-ink-1 text-[13px]">{a.what}</span>
-                <span className="num text-ink-3 text-[11.5px]">
-                  {a.at} · sha256 {a.hash}
-                </span>
+              <li key={a.at} className="flex gap-3 py-2.5">
+                <span className="dot mt-[7px]" style={{ color: TONE[a.tone] }} />
+                <div className="min-w-0">
+                  <p className="text-ink-1 text-[13px]">{a.what}</p>
+                  <p className="num text-ink-3 mt-0.5 text-[11.5px]">
+                    {a.at} · sha256 {a.hash}
+                  </p>
+                </div>
               </li>
             ))}
           </ol>

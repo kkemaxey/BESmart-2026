@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SynapseGrid",
+  title: "GridFlex",
   description: "Grid-interactive control room for hyperscale AI campuses.",
 };
 
@@ -32,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 <span className="grid size-7 place-items-center rounded-[8px] bg-[oklch(72%_0.08_20)] text-[oklch(25%_0.04_20)]">
                   <Icon name="bolt" size={15} weight={2} />
                 </span>
-                <span className="text-[15px] font-semibold tracking-tight">SynapseGrid</span>
+                <span className="text-[15px] font-semibold tracking-tight">GridFlex</span>
               </Link>
               <div className="border-line-strong bg-surface-2 text-ink-2 flex items-center gap-2 rounded-[10px] border py-1 pr-3 pl-1 text-[13px]">
                 <span className="bg-surface-4 text-ink-1 grid size-6 place-items-center rounded-[6px] text-[10px] font-semibold">

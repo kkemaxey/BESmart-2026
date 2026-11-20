@@ -35,7 +35,7 @@ export function Collapsible({
           />
         </button>
       </h2>
-      <div id={id} className="collapse" data-open={open}>
+      <div id={id} className="disclosure" data-open={open}>
         <div>
           <div className="px-4 pt-1 pb-4">{children}</div>
         </div>
